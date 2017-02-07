@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    sim卡１IMEI号的最大长度     -->
+    <integer name="sim1_imei_length">15</integer>
+    <!--    sim卡2IMEI号的最大长度     -->
+    <integer name="sim2_imei_length">15</integer>
+    <!--    MEID号的最大长度     -->
+    <integer name="meid_length">14</integer>
+    <!--    是否允许设置sim卡１的imei号     -->
+    <bool name="enabled_setting_sim1_imei">true</bool>
+    <!--    是否允许设置sim卡2的imei号     -->
+    <bool name="enabled_setting_sim2_imei">true</bool>
+    <!--    是否允许设置MEID号     -->
+    <bool name="enabled_setting_meid">true</bool>
+    <!--    是否允许分别设置IMEI和MEID号，即不用全部填完即可设置.写值的项设置，没有写值的项就不设置     -->
+    <bool name="enabled_respectively_set">true</bool>
+    <!--    重启或恢复出厂设置后，是否恢复上次写入的值       -->
+    <bool name="restore_imei_and_meid">true</bool>
+    <!--    设置MEID号延迟时间，单位：毫秒   -->
+    <integer name="set_meid_delayed_time">15000</integer>
+    <!--    开机完成后，更新IMEI号和MEID号延迟时间，单位：毫秒     -->
+    <integer name="update_imei_and_meid_delayed_time">60000</integer>
+
+</resources>

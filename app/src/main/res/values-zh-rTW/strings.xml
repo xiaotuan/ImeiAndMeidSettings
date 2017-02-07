@@ -1,0 +1,18 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">"設置IMEI與MEID號"</string>
+    <string name="setting_imei">"設置IMEI"</string>
+    <string name="setting_meid">"設置MEID"</string>
+
+    <string name="setting">"設置"</string>
+    <string name="ok">"確定"</string>
+    <string name="success">"設置IMEI和MEID成功，請重啟手機"</string>
+    <string name="fail">"設置IMEI和MEID失敗，請重啟手機"</string>
+    <string name="success_no_meid">"設置IMEI成功，請重啟手機"</string>
+    <string name="success_no_imei">"設置MEID成功，請重啟手機"</string>
+    <string name="fail_no_meid">"設置IMEI失敗，請重啟手機"</string>
+    <string name="fail_no_imei">"設置MEID失敗，請重啟手機"</string>
+    <string name="sim1_imei_length_limit_tip">"SIM1的IMEI號長度應為"<xliff:g id="length">%d</xliff:g></string>
+    <string name="sim2_imei_length_limit_tip">"SIM２的IMEI號長度應為"<xliff:g id="length">%d</xliff:g></string>
+    <string name="meid_length_limit_tip">"MEID號長度應為"<xliff:g id="length">%d</xliff:g></string>
+    <string name="setting_dialog_msg">"正在寫入，請稍後..."</string>
+</resources>
