@@ -27,6 +27,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile files('libs/telephony-common.jar')
+    compile files('libs/frameworks.jar')
 }
 
 tasks.withType(JavaCompile) {

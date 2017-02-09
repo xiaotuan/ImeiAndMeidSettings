@@ -14,5 +14,11 @@
     <string name="sim1_imei_length_limit_tip">"SIM1的IMEI號長度應為"<xliff:g id="length">%d</xliff:g></string>
     <string name="sim2_imei_length_limit_tip">"SIM２的IMEI號長度應為"<xliff:g id="length">%d</xliff:g></string>
     <string name="meid_length_limit_tip">"MEID號長度應為"<xliff:g id="length">%d</xliff:g></string>
+    <string name="sim1_imei_value_limit_tip">"SIM1 IMEI號不能為"<xliff:g id="length">%s</xliff:g></string>
+    <string name="sim2_imei_value_limit_tip">"SIM1 IMEI號不能為"<xliff:g id="length">%s</xliff:g></string>
+    <string name="meid_value_limit_tip">"MEID號不能為"<xliff:g id="length">%s</xliff:g></string>
     <string name="setting_dialog_msg">"正在寫入，請稍後..."</string>
+    <string name="clear_nv">"清除NV"</string>
+    <string name="clear_success">"清除成功"</string>
+    <string name="clear_fail">"清除失敗"</string>
 </resources>

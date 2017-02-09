@@ -16,6 +16,9 @@ import com.mediatek.internal.telephony.cdma.CdmaFeatureOptionUtils;
 import com.mediatek.internal.telephony.ltedc.svlte.SvltePhoneProxy;
 import com.mediatek.internal.telephony.ITelephonyEx;
 
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
 public class SettingHelper {
 
     public static final int MSG_SETTING_SIM1_IMEI = 0;
@@ -126,18 +129,21 @@ public class SettingHelper {
     public boolean writeSim1ImeiToNv(String imei) {
         Log.d(this, "writeSim1ImeiToNv=>imei: " + imei);
         byte[] bytes = stringToBytes(imei, mSim1ImeiLength);
+        bytes = Arrays.copyOf(bytes, 10);
         return NvRAMUtils.writeNV(NvRAMUtils.INDEX_SIM1_IMEI, bytes);
     }
 
     public boolean writeSim2ImeiToNv(String imei) {
         Log.d(this, "writeSim2ImeiToNv=>imei: " + imei);
         byte[] bytes = stringToBytes(imei, mSim2ImeiLength);
+        bytes = Arrays.copyOf(bytes, 10);
         return NvRAMUtils.writeNV(NvRAMUtils.INDEX_SIM2_IMEI, bytes);
     }
 
     public boolean writeMeidToNv(String meid) {
         Log.d(this, "writeMeidToNv=>meid: " + meid);
         byte[] bytes = stringToBytes(meid, mMeidLength);
+        bytes = Arrays.copyOf(bytes, 10);
         return NvRAMUtils.writeNV(NvRAMUtils.INDEX_MEID, bytes);
     }
 
@@ -146,7 +152,10 @@ public class SettingHelper {
         byte[] bytes = NvRAMUtils.readNV(NvRAMUtils.INDEX_SIM1_IMEI, NvRAMUtils.SIM1_IMEI_LENGTH);
         imei = bytesToString(bytes, mSim1ImeiLength);
         Log.d(this, "getSim1ImeiFromNv=>imei: " + imei);
-        return imei.trim();
+        if (!isLegitimateImei(imei, mSim1ImeiLength)) {
+            imei = "";
+        }
+        return imei;
     }
 
     public String getSim2ImeiFromNv() {
@@ -154,6 +163,9 @@ public class SettingHelper {
         byte[] bytes = NvRAMUtils.readNV(NvRAMUtils.INDEX_SIM2_IMEI, NvRAMUtils.SIM2_IMEI_LENGTH);
         imei = bytesToString(bytes, mSim2ImeiLength);
         Log.d(this, "getSim2ImeiFromNv=>imei: " + imei);
+        if (!isLegitimateImei(imei, mSim2ImeiLength)) {
+            imei = "";
+        }
         return imei.trim();
     }
 
@@ -162,6 +174,9 @@ public class SettingHelper {
         byte[] bytes = NvRAMUtils.readNV(NvRAMUtils.INDEX_MEID, NvRAMUtils.MEID_LENGTH);
         meid = bytesToString(bytes, mMeidLength);
         Log.d(this, "getMeidFromNv=>meid: " + meid);
+        if (!isLegitimateMeid(meid, mMeidLength)) {
+            meid = "";
+        }
         return meid.trim();
     }
 
@@ -188,15 +203,28 @@ public class SettingHelper {
             if (mEnabledRespectivelySet) {
                 if (!TextUtils.isEmpty(imei) && imei.length() != mSim1ImeiLength) {
                     result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.sim1_imei_length_limit_tip, mSim1ImeiLength), Toast.LENGTH_SHORT).show();
+                    }
+                } else if ("000000000000000".equals(imei)) {
+                    result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.sim1_imei_value_limit_tip, "000000000000000"), Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
                 if (imei.length() != mSim1ImeiLength) {
                     result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.sim1_imei_length_limit_tip, mSim1ImeiLength), Toast.LENGTH_SHORT).show();
+                    }
+                } else if ("000000000000000".equals(imei)) {
+                    result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.sim1_imei_value_limit_tip, "000000000000000"), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-        }
-        if (!result && showTip) {
-            Toast.makeText(mContext, mContext.getString(R.string.sim1_imei_length_limit_tip, mSim1ImeiLength), Toast.LENGTH_SHORT).show();
         }
         return result;
     }
@@ -207,15 +235,28 @@ public class SettingHelper {
             if (mEnabledRespectivelySet) {
                 if (!TextUtils.isEmpty(imei) && imei.length() != mSim2ImeiLength) {
                     result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.sim2_imei_length_limit_tip, mSim2ImeiLength), Toast.LENGTH_SHORT).show();
+                    }
+                } else if ("000000000000000".equals(imei)) {
+                    result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.sim2_imei_value_limit_tip, "000000000000000"), Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
                 if (imei.length() != mSim2ImeiLength) {
                     result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.sim2_imei_length_limit_tip, mSim2ImeiLength), Toast.LENGTH_SHORT).show();
+                    }
+                } else if ("000000000000000".equals(imei)) {
+                    result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.sim2_imei_value_limit_tip, "000000000000000"), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-        }
-        if (!result && showTip) {
-            Toast.makeText(mContext, mContext.getString(R.string.sim2_imei_length_limit_tip, mSim2ImeiLength), Toast.LENGTH_SHORT).show();
         }
         return result;
     }
@@ -226,15 +267,28 @@ public class SettingHelper {
             if (mEnabledRespectivelySet) {
                 if (!TextUtils.isEmpty(meid) && meid.length() != mMeidLength) {
                     result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.meid_length_limit_tip, mMeidLength), Toast.LENGTH_SHORT).show();
+                    }
+                } else if ("00000000000000".equals(meid)) {
+                    result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.meid_value_limit_tip, "00000000000000"), Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
                 if (meid.length() != mMeidLength) {
                     result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.meid_length_limit_tip, mMeidLength), Toast.LENGTH_SHORT).show();
+                    }
+                } else if ("00000000000000".equals(meid)) {
+                    result = false;
+                    if (showTip) {
+                        Toast.makeText(mContext, mContext.getString(R.string.meid_value_limit_tip, "00000000000000"), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-        }
-        if (!result && showTip) {
-            Toast.makeText(mContext, mContext.getString(R.string.meid_length_limit_tip, mMeidLength), Toast.LENGTH_SHORT).show();
         }
         return result;
     }
@@ -269,7 +323,7 @@ public class SettingHelper {
         return need;
     }
 
-    public static byte[] stringToBytes(String str, int length) {
+    public byte[] stringToBytes(String str, int length) {
         if (str == null || "".equals(str)) {
             return null;
         }
@@ -278,9 +332,9 @@ public class SettingHelper {
             len++;
         }
         byte[] bytes = new byte[len];
-        for (int i = 0, j = 0; i < str.length() && j < len; i+=2, j++) {
+        for (int i = 0, j = 0; i < str.length() && j < len; i += 2, j++) {
             if (i + 1 >= str.length()) {
-                bytes[j] = (byte)str.charAt(i);
+                bytes[j] = (byte) str.charAt(i);
             } else {
                 bytes[j] = mergeByte(str.charAt(i), str.charAt(i + 1));
             }
@@ -288,7 +342,7 @@ public class SettingHelper {
         return bytes;
     }
 
-    public static byte mergeByte(char first, char second) {
+    public byte mergeByte(char first, char second) {
         int f = Integer.parseInt(String.valueOf(first), 16);
         int s = Integer.parseInt(String.valueOf(second), 16);
         int result = f << 4;
@@ -296,28 +350,51 @@ public class SettingHelper {
         return (byte) (result & 0xFF);
     }
 
-    public static String bytesToString(byte[] bytes, int length) {
-        if (bytes == null || bytes.length == 0) {
-            return null;
-        }
-        byte[] result = new byte[length];
-        for (int i = 0, j = 0; i < bytes.length && j < length; i++, j += 2) {
-            if (j + 1 >= length) {
-                result[j] = bytes[i];
-            } else {
-                result[j] = getHightByte(bytes[i]);
-                result[j + 1] = getLowByte(bytes[i]);
+    public String bytesToString(byte[] bytes, int length) {
+        String result = "";
+        if (bytes != null && bytes.length != 0) {
+            byte[] realBytes = new byte[length];
+            for (int i = 0, j = 0; i < bytes.length && j < length; i++, j += 2) {
+                if (j + 1 >= length) {
+                    realBytes[j] = bytes[i];
+                } else {
+                    realBytes[j] = getHightByte(bytes[i]);
+                    realBytes[j + 1] = getLowByte(bytes[i]);
+                }
+            }
+            if (!isUninitializedValue(realBytes)) {
+                result = new String(result).trim().toUpperCase();
             }
         }
-        return new String(result).toUpperCase();
+        return result;
     }
 
-    public static byte getHightByte(byte b) {
+    public boolean isUninitializedValue(byte[] bytes) {
+        boolean result = true;
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] != 0) {
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    public byte getHightByte(byte b) {
         return Integer.toString(((b & 0xFF) >>> 4), 16).getBytes()[0];
     }
 
-    public static byte getLowByte(byte b) {
+    public byte getLowByte(byte b) {
         return Integer.toString((b & 0xF), 16).getBytes()[0];
+    }
+
+    public boolean isLegitimateImei(String imei, int length) {
+        String regex = "[0-9]*";
+        return (imei != null && imei.length() == length && Pattern.compile(regex).matcher(imei).matches());
+    }
+
+    public boolean isLegitimateMeid(String meid, int length) {
+        String regex = "[0-9a-fA-F]*";
+        return (meid != null && meid.length() == length && Pattern.compile(regex).matcher(meid).matches());
     }
 
     public Phone getCDMAPhone() {
@@ -329,15 +406,15 @@ public class SettingHelper {
                 if (spp.getNLtePhone() != null) {
                     Log.d(this, "getCDMAPhone=>NLtePhone...");
                     phone = spp.getNLtePhone();
+                    if (!phone.isRadioAvailable()) {
+                        spp.toggleActivePhone(3);
+                    }
                 } else {
                     phone = defaultPhone;
                 }
             }
         } else {
             phone = PhoneFactory.getCdmaPhone();
-        }
-        if (!phone.isRadioAvailable()) {
-            phone.setRadioPower(true);
         }
         return phone;
     }
@@ -351,6 +428,9 @@ public class SettingHelper {
                 if (spp.getNLtePhone() != null) {
                     Log.d(this, "getGSMPhone=>LtePhone...");
                     phone = spp.getLtePhone();
+                    if (!phone.isRadioAvailable()) {
+                        spp.toggleActivePhone(2);
+                    }
                 } else {
                     phone = defaultPhone;
                 }
@@ -362,7 +442,7 @@ public class SettingHelper {
     }
 
     public boolean needSwapImei() {
-        String swap = SystemProperties.get("persist.radio.simswitch","0");
+        String swap = SystemProperties.get("persist.radio.simswitch", "0");
         return swap.equals("2");
     }
 
@@ -389,7 +469,24 @@ public class SettingHelper {
     }
 
     public String getMeid() {
-        Phone phone = getCDMAPhone();
-        return phone.getMeid();
+        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        if (mIsC2KProject) {
+            try {
+                ITelephonyEx iTel = ITelephonyEx.Stub.asInterface(
+                        ServiceManager.getService(Context.TELEPHONY_SERVICE_EX));
+                if (iTel != null) {
+                    return iTel.getMeid();
+                }
+            } catch (RemoteException e) {
+                Log.e(this, "getDeviceId=>error: ", e);
+            }
+        }
+        return null;
+    }
+
+    public boolean clearNV() {
+        boolean result = false;
+        result = NvRAMUtils.writeNV(NvRAMUtils.INDEX_SIM1_IMEI, new byte[NvRAMUtils.INDEX_MEID + NvRAMUtils.MEID_LENGTH - NvRAMUtils.INDEX_SIM1_IMEI]);
+        return result;
     }
 }

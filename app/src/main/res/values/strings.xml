@@ -18,7 +18,13 @@
     <string name="sim1_imei_length_limit_tip">SIM1 IMEI number must be equal to <xliff:g id="length">%d</xliff:g></string>
     <string name="sim2_imei_length_limit_tip">SIM2 IMEI number must be equal to <xliff:g id="length">%d</xliff:g></string>
     <string name="meid_length_limit_tip">MEID number must be equal to <xliff:g id="length">%d</xliff:g></string>
+    <string name="sim1_imei_value_limit_tip">SIM1 IMEI number can not be <xliff:g id="length">%s</xliff:g></string>
+    <string name="sim2_imei_value_limit_tip">SIM1 IMEI number can not be <xliff:g id="length">%s</xliff:g></string>
+    <string name="meid_value_limit_tip">MEID number can not be <xliff:g id="length">%s</xliff:g></string>
     <string name="setting_dialog_msg">Writing, please wait ...</string>
+    <string name="clear_nv">Clear NV</string>
+    <string name="clear_success">Clear success</string>
+    <string name="clear_fail">Clear fail</string>
     <string name="secret_code">1122</string>
 
 </resources>

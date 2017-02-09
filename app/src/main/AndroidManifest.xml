@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ImeiAndMeidSettings"
-            android:process="com.android.phone">
+            android:process="com.android.phone"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

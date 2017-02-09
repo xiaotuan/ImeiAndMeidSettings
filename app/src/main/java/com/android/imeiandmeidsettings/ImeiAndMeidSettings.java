@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ImeiAndMeidSettings extends Activity implements View.OnClickListener {
 
@@ -26,6 +27,7 @@ public class ImeiAndMeidSettings extends Activity implements View.OnClickListene
     private EditText mSim2ImeiEt;
     private EditText mMeidEt;
     private Button mSettingBt;
+    private Button mClearNvBt;
     private SettingHelper mHelper;
     private Dialog mSettingDialog;
 
@@ -60,7 +62,9 @@ public class ImeiAndMeidSettings extends Activity implements View.OnClickListene
         mSim2ImeiEt = (EditText) findViewById(R.id.sim2_imei);
         mMeidEt = (EditText) findViewById(R.id.meid);
         mSettingBt = (Button) findViewById(R.id.setting);
+        mClearNvBt = (Button) findViewById(R.id.clear);
         mSettingBt.setOnClickListener(this);
+        mClearNvBt.setOnClickListener(this);
     }
 
     @Override
@@ -71,24 +75,37 @@ public class ImeiAndMeidSettings extends Activity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        mSim1Imei = mSim1ImeiEt.getText().toString().trim();
-        mSim2Imei = mSim2ImeiEt.getText().toString().trim();
-        mMeid = mMeidEt.getText().toString().trim();
-        boolean enabledSetting = mHelper.enabledSettingImeiAndMeid(mSim1Imei, mSim2Imei, mMeid, true);
-        if (enabledSetting) {
-            mSuccessCount = 0;
-            mFailCount = 0;
-            mSettingCount = mHelper.getSettingCount(mSim1Imei, mSim2Imei, mMeid);
-            if (mSettingCount > 0) {
-                if (!mSettingDialog.isShowing()) {
-                    mSettingDialog.show();
+        switch (v.getId()) {
+            case R.id.setting:
+                mSim1Imei = mSim1ImeiEt.getText().toString().trim();
+                mSim2Imei = mSim2ImeiEt.getText().toString().trim();
+                mMeid = mMeidEt.getText().toString().trim();
+                boolean enabledSetting = mHelper.enabledSettingImeiAndMeid(mSim1Imei, mSim2Imei, mMeid, true);
+                if (enabledSetting) {
+                    mSuccessCount = 0;
+                    mFailCount = 0;
+                    mSettingCount = mHelper.getSettingCount(mSim1Imei, mSim2Imei, mMeid);
+                    if (mSettingCount > 0) {
+                        if (!mSettingDialog.isShowing()) {
+                            mSettingDialog.show();
+                        }
+                        mSim1ImeiEt.setEnabled(false);
+                        mSim2ImeiEt.setEnabled(false);
+                        mMeidEt.setEnabled(false);
+                        mSettingBt.setEnabled(false);
+                        mClearNvBt.setEnabled(false);
+                        mHandler.sendEmptyMessage(SettingHelper.MSG_SETTING_SIM1_IMEI);
+                    }
                 }
-                mSim1ImeiEt.setEnabled(false);
-                mSim2ImeiEt.setEnabled(false);
-                mMeidEt.setEnabled(false);
-                mSettingBt.setEnabled(false);
-                mHandler.sendEmptyMessage(SettingHelper.MSG_SETTING_SIM1_IMEI);
-            }
+                break;
+
+            case R.id.clear:
+                if (mHelper.clearNV()) {
+                    Toast.makeText(this, R.string.clear_success, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.clear_fail, Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -179,6 +196,7 @@ public class ImeiAndMeidSettings extends Activity implements View.OnClickListene
             mMeidEt.setEnabled(true);
             mSettingBt.setEnabled(true);
             mSettingBt.setEnabled(true);
+            mClearNvBt.setEnabled(true);
         }
     }
 
